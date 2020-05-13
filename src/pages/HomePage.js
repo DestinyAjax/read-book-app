@@ -10,8 +10,6 @@ import '../assets/css/App.css';
 class HomePage extends React.Component {
 
     state = {
-      showSearchPage: false,
-      books: [],
       wantToRead: [],
       currentlyReading: [],
       read: []
@@ -85,9 +83,9 @@ class HomePage extends React.Component {
     changeCategory = async (e, book, value) => {
         const payload = {id: book.id};
         const shelf = e.target.value;
-        await update(payload, shelf);
         this.removeBook(book, shelf, value);
         this.addNewBook(book, shelf, value);
+        await update(payload, shelf);
     }
   
     render() {
@@ -97,7 +95,7 @@ class HomePage extends React.Component {
             <div className="app">
                 <div className="list-books">
                     <div className="list-books-title">
-                        <h1>MyReads</h1>
+                        <h1>MyRead Books App</h1>
                     </div>
                     <div className="list-books-content">
                         <div>

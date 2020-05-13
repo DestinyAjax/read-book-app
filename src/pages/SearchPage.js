@@ -1,14 +1,55 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
+import BookGrid from "../components/BookGrid";
+import SelectDropDown from "../components/SelectDropDown";
+import BookCover from "../components/BookCover";
+import { search, update } from "../api/BookAPI";
 import '../assets/css/App.css';
 
 class SearchPage extends React.Component {
 
     state = {
-        showSearchPage: true
+        books: [],
+        query: ""
+    }
+
+    searchBooks = async () => {
+        const { query } = this.state;
+        if (query.length > 2) {
+            const books = await search(query.trim());
+            if (!books.error) {
+                console.log(books);
+                this.setState(() => ({
+                    books: books
+                }));
+            }
+            return;
+        }
+
+        this.setState(() => ({
+            books: []
+        }));
+    }
+
+    handleInputChange = (e) => {
+        const value = e.target.value;
+        this.setState(() => ({ query: value }));
+        this.searchBooks();
+    }
+
+    changeCategory = async (e, book) => {
+        const payload = {id: book.id};
+        const shelf = e.target.value;
+        await update(payload, shelf);
+        this.props.history.push("/");
     }
 
     render() {
+        const { query, books } = this.state;
+        const filteredBooks = books.filter((b) => 
+            b.title.toLowerCase().includes(query.toLowerCase())
+        );
+
         return (
             <div className="search-books">
                 <div className="search-books-bar">
@@ -16,22 +57,30 @@ class SearchPage extends React.Component {
                         <button className="close-search">Close</button>
                     </Link>
                     <div className="search-books-input-wrapper">
-                        {/*
-                            NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                            You can find these search terms here:
-                            https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-                            However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                            you don't find a specific author or title. Every search is limited by search terms.
-                        */}
-                        <input type="text" placeholder="Search by title or author"/>
+                        <input type="text" value={query} onChange={this.handleInputChange} placeholder="Search by title or author"/>
                     </div>
                 </div>
                 <div className="search-books-results">
-                    <ol className="books-grid"></ol>
+                    <BookGrid>
+                        {filteredBooks.map(book => (
+                            <BookGrid.Item key={book.id}>
+                                <div className="book">
+                                    <div className="book-top">
+                                        <BookCover url={book.imageLinks.thumbnail} />
+                                        <SelectDropDown mark="currentlyReading" moveBook={(e) => {this.changeCategory(e, book)}}/>
+                                    </div>
+                                    <div className="book-title">{book.title}</div>
+                                    <div className="book-authors">
+                                        {book.authors && book.authors.map((author,index) => <span key={index}>{author}</span>)}
+                                    </div>
+                                </div>
+                            </BookGrid.Item>
+                        ))}
+                    </BookGrid>
                 </div>
             </div>
         );
     }
 }
 
-export default SearchPage;
+export default withRouter(SearchPage);
