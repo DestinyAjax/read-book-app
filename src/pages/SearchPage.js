@@ -15,10 +15,9 @@ class SearchPage extends React.Component {
 
     searchBooks = async () => {
         const { query } = this.state;
-        if (query.length > 2) {
+        if (query) {
             const books = await search(query.trim());
             if (!books.error) {
-                console.log(books);
                 this.setState(() => ({
                     books: books
                 }));
