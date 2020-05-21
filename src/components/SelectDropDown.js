@@ -5,13 +5,16 @@ import '../assets/css/App.css';
 class SelectDropDown extends React.Component {
 
     render() {
-        const { mark } = this.props;
+        const { book } = this.props;
 
         let defaultValue = "wantToRead";
-        if (mark === "currentlyReading") {
+        if (book.shelf === "currentlyReading") {
             defaultValue = "currentlyReading"
         }
-        else if (mark === "read") {
+        else if(book.shelf === "None") {
+            defaultValue = "none";
+        }
+        else if (book.shelf === "read") {
             defaultValue = "read";
         }
 
@@ -30,7 +33,7 @@ class SelectDropDown extends React.Component {
 }
 
 SelectDropDown.propTypes = {
-    mark: PropTypes.string.isRequired,
+    book: PropTypes.object.isRequired,
     moveBook: PropTypes.func.isRequired
 };
 

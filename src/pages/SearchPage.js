@@ -3,7 +3,7 @@ import { Link, withRouter } from "react-router-dom";
 import BookGrid from "../components/BookGrid";
 import SelectDropDown from "../components/SelectDropDown";
 import BookCover from "../components/BookCover";
-import { search, update } from "../api/BookAPI";
+import { search, update, getAll } from "../api/BookAPI";
 import '../assets/css/App.css';
 
 class SearchPage extends React.Component {
@@ -13,14 +13,26 @@ class SearchPage extends React.Component {
         query: ""
     }
 
-    searchBooks = async () => {
-        const { query } = this.state;
+    searchBooks = async query => {
+        const homepage_books = await getAll();
+        const homepage_book_ids = homepage_books.map(book => book.id);
+        
         if (query) {
-            const books = await search(query.trim());
-            if (!books.error) {
-                this.setState(() => ({
-                    books: books
-                }));
+            const search_payload = await search(query.trim());
+            if (!search_payload.error) {
+                const new_books = search_payload.filter(book => {
+                    if (homepage_book_ids.includes(book.id)) {
+                        const new_books = homepage_books.filter(value => value.id === book.id);
+                        for (const new_book of new_books) {
+                            return Object.assign(book, {shelf: new_book.shelf});
+                        }
+                    }
+                    else {
+                        return Object.assign(book, {shelf: "None"});
+                    }
+                });
+
+                this.setState(() => ({books: new_books}));
             }
             return;
         }
@@ -33,7 +45,7 @@ class SearchPage extends React.Component {
     handleInputChange = (e) => {
         const value = e.target.value;
         this.setState(() => ({ query: value }));
-        this.searchBooks();
+        this.searchBooks(value);
     }
 
     changeCategory = async (e, book) => {
@@ -61,12 +73,14 @@ class SearchPage extends React.Component {
                 </div>
                 <div className="search-books-results">
                     <BookGrid>
-                        {filteredBooks.map(book => (
+                        {filteredBooks.length > 0 && filteredBooks.map(book => (
                             <BookGrid.Item key={book.id}>
                                 <div className="book">
                                     <div className="book-top">
-                                        <BookCover url={book.imageLinks.thumbnail} />
-                                        <SelectDropDown mark="currentlyReading" moveBook={(e) => {this.changeCategory(e, book)}}/>
+                                        {book.imageLinks && (
+                                            <BookCover url={book.imageLinks.thumbnail ? book.imageLinks.thumbnail : ""} />
+                                        )}
+                                        <SelectDropDown book={book} moveBook={(e) => {this.changeCategory(e, book)}}/>
                                     </div>
                                     <div className="book-title">{book.title}</div>
                                     <div className="book-authors">
