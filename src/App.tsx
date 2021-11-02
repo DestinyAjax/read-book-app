@@ -5,14 +5,14 @@ import HomePage from "./pages/HomePage";
 import SearchPage from "./pages/SearchPage";
 
 const App = () => {
-  return (
-    <Router>
-      <Switch>
-        <Route exact path="/" component={HomePage} />
-        <Route pat="/search" component={SearchPage} />
-      </Switch>
-    </Router>
-  );
-}
+	return (
+		<Router>
+			<Switch>
+				<Route exact path="/" component={HomePage} />
+				<Route path="/search" component={SearchPage} />
+			</Switch>
+		</Router>
+	);
+};
 
 export default App;
