@@ -6,10 +6,10 @@ import '../assets/css/App.css';
 
 interface SelectDropDownProps {
    book: IBook;
-   onMoveBook: () => void;
+   onMoveBook: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
-export const SelectDropDown = (props: SelectDropDownProps) => {
+const SelectDropDown = (props: SelectDropDownProps) => {
    const { book, onMoveBook } = props;
 
    const defaultValue = React.useMemo(() => {
@@ -20,8 +20,10 @@ export const SelectDropDown = (props: SelectDropDownProps) => {
             break;
          case 'None':
             value = BookStatusEnum.NONE;
+            break;
          case BookStatusEnum.READ:
             value = BookStatusEnum.READ;
+            break;
          default:
             value = BookStatusEnum.WANT_TO_READ;
             break;
