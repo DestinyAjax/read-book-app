@@ -1,13 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { QueryClient, QueryClientProvider} from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools'
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+export const reactQueryclient = new QueryClient();
+
 ReactDOM.render(
-  <React.StrictMode>
+  <QueryClientProvider client={reactQueryclient}>
     <App />
-  </React.StrictMode>,
+    <ReactQueryDevtools />
+  </QueryClientProvider>,
   document.getElementById('root')
 );
 

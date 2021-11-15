@@ -1,26 +1,26 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import { useQuery, useMutation } from 'react-query';
 import { SelectDropDown, BookCover, BookGrid } from '../components';
 import { IBook } from '../models';
-import { BookStatusEnum } from '../constants'
+import { BookStatusEnum } from '../constants';
 import { search, update, getAll } from '../api/BookAPI';
+import { reactQueryclient } from '../index';
 import '../assets/css/App.css';
 
 const SearchPage = (props: any) => {
-  const [books, setBooks] = React.useState<IBook[]>([]);
   const [searchQuery, setSearchQuery] = React.useState('');
+  const [searchPayload, setSearchPayload] = React.useState<IBook[]>([]);
+  const { data: homePageBooks } = useQuery('books', getAll);
 
-  const handleSearch = async (query: string) => {
-    const homePageBooks = await getAll();
-    const homePageBookIds = homePageBooks.map((book) => book.id);
-
-    if (query) {
-      const searchPayload = await search(query.trim());
-      
-      if (!(searchPayload as any).error) {
-        const newBooks = searchPayload.filter((book) => {
-          if (homePageBookIds.includes(book.id)) {
-            const filteredBooks = homePageBooks.filter((value) => value.id === book.id);
+  const searchMutation = useMutation((payload: { query: string }) => search(payload.query), {
+    onSuccess(data) {
+      if (data && data.length) {
+        reactQueryclient.invalidateQueries('books');
+        const homePageBookIds = homePageBooks?.map((book) => book.id);
+        const newBooks = data?.filter((book) => {
+          if (homePageBookIds && homePageBookIds.includes(book.id)) {
+            const filteredBooks = homePageBooks?.filter((value) => value.id === book.id) || [];
             for (const new_book of filteredBooks) {
               return { ...book, shelf: new_book.shelf };
             }
@@ -29,30 +29,37 @@ const SearchPage = (props: any) => {
           }
         });
 
-        setBooks(newBooks);
+        setSearchPayload(newBooks);
       }
-      return;
+    },
+  });
+
+  const updatePostMutation = useMutation(
+    (payload: { bookId: string; shelf: string }) => update(payload.bookId, payload.shelf),
+    {
+      onSuccess() {
+        reactQueryclient.invalidateQueries('books');
+        props.history.push('/');
+      },
     }
+  );
 
-    setBooks([]);
-  };
+  const filteredBooks = React.useMemo(
+    () =>
+      searchPayload.filter((book) => book.title.toLowerCase().includes(searchQuery.toLowerCase())),
+    [searchPayload, searchQuery]
+  );
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.currentTarget.value;
-    setSearchQuery(value);
-    handleSearch(value);
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const query = event.currentTarget.value;
+    setSearchQuery(query);
+    if (query) searchMutation.mutate({ query: query.trim() });
   };
 
   const changeCategory = async (event: React.ChangeEvent<HTMLSelectElement>, book: IBook) => {
     const shelf = event.currentTarget.value;
-    await update(book.id, shelf);
-    props.history.push('/');
+    updatePostMutation.mutate({ bookId: book.id, shelf });
   };
-
-  const filteredBooks = React.useMemo(
-    () => books.filter((book) => book.title.toLowerCase().includes(searchQuery.toLowerCase())),
-    [books, searchQuery]
-  );
 
   return (
     <div className="search-books">
@@ -64,7 +71,7 @@ const SearchPage = (props: any) => {
           <input
             type="text"
             value={searchQuery}
-            onChange={handleInputChange}
+            onChange={handleSearch}
             placeholder="Search by title or author"
           />
         </div>
