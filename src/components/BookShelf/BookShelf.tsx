@@ -1,9 +1,8 @@
 import React from 'react';
-import BookGrid from './BookGrid';
-import { IBook } from '../models';
-import {SelectDropDown} from './';
-import BookCover from './BookCover';
-import '../assets/css/App.css';
+import {BookGrid} from '..';
+import { IBook } from '../../models';
+import {SelectDropDown, BookCover} from '..';
+import { BookShelfStyleWrapper} from './BookShelf.style';
 
 interface BookShelfProps {
   books: IBook[];
@@ -12,24 +11,24 @@ interface BookShelfProps {
   onChangeBook: (event: React.ChangeEvent<HTMLSelectElement>, book: IBook) => void;
 }
 
-const BookShelf = (props: BookShelfProps) => {
+export const BookShelf = (props: BookShelfProps) => {
   const { books, type, title, onChangeBook } = props;
   const filteredBooks = React.useMemo(() => books.filter((b) => b.shelf === type), [books, type]);
 
   return (
-    <div className="bookshelf">
-      <h2 className="bookshelf-title">{title}</h2>
-      <div className="bookshelf-books">
+    <BookShelfStyleWrapper className="BookShelf">
+      <h2 className="BookShelf__title">{title}</h2>
+      <div className="BookShelf__books">
         <BookGrid>
           {filteredBooks.map((book) => (
             <BookGrid.Item key={book.id}>
-              <div className="book">
-                <div className="book-top">
+              <div className="BookShelf__books__book">
+                <div className="BookShelf__books__book-top">
                   <BookCover url={book.imageLinks.thumbnail} />
                   <SelectDropDown book={book} onMoveBook={(e) => onChangeBook(e, book)} />
                 </div>
-                <div className="book-title">{book.title}</div>
-                <div className="book-authors">
+                <div className="BookShelf__books__book-title">{book.title}</div>
+                <div className="BookShelf__books__book-authors">
                   {book.authors.map((author, index) => (
                     <span key={index}>{author}</span>
                   ))}
@@ -39,8 +38,6 @@ const BookShelf = (props: BookShelfProps) => {
           ))}
         </BookGrid>
       </div>
-    </div>
+    </BookShelfStyleWrapper>
   );
 };
-
-export default BookShelf;

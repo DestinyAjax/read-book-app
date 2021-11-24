@@ -1,5 +1,5 @@
 import React from 'react';
-import '../assets/css/App.css';
+import { BookGridStyleWrapper } from './BookGrid.style';
 
 interface BookGridProps {
   children: React.ReactNode;
@@ -7,10 +7,8 @@ interface BookGridProps {
 
 const BookItem = (props: BookGridProps) => <li>{props.children}</li>;
 
-const BookGrid = (props: BookGridProps) => {
-  return <ol className="books-grid">{props.children}</ol>;
+export const BookGrid = (props: BookGridProps) => {
+  return <BookGridStyleWrapper>{props.children}</BookGridStyleWrapper>;
 };
 
 BookGrid.Item = BookItem;
-
-export default BookGrid;

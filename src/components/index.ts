@@ -1,6 +1,4 @@
-import BookCover from './BookCover';
-import BookGrid from './BookGrid';
-import BookShelf from './BookShelf';
+export * from './BookCover';
 export * from './SelectDropDown';
-
-export { BookCover, BookGrid, BookShelf };
+export * from './BookGrid';
+export * from './BookShelf';
