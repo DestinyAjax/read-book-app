@@ -1,8 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { useQuery, useMutation } from 'react-query';
 import startCase from 'lodash/startCase';
-import { BookShelf } from '../components';
+import { BookShelf, AddButton } from '../components';
 import { IBook } from '../models';
 import { BookStatusEnum } from '../constants';
 import { getAll, update } from '../api/BookAPI';
@@ -46,10 +45,10 @@ const HomePage = () => {
 
   return (
     <div className="app">
-      <div className="list-books">
-        <div className="list-books-title">
-          <h1>MyRead Books App</h1>
-        </div>
+      <header className="list-books-title">
+        <h1>My Book Library</h1>
+      </header>
+      <section className="list-books">
         <div className="list-books-content">
           {books ? (
             <React.Fragment>
@@ -81,11 +80,9 @@ const HomePage = () => {
           ) : null}
         </div>
         <div className="open-search">
-          <Link to="/search">
-            <button>Add a book</button>
-          </Link>
+          <AddButton />
         </div>
-      </div>
+      </section>
     </div>
   );
 };

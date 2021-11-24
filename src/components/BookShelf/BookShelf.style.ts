@@ -12,6 +12,7 @@ export const BookShelfStyleWrapper = styled.div`
 
     &__title {
       border-bottom: 1px solid #dedede;
+      padding: 10px;
     }
 
     &__books {
