@@ -1,15 +1,15 @@
 import React from 'react';
 import startCase from 'lodash/startCase';
-import { BookStatusEnum, BookStatuses } from '../constants';
-import { IBook } from '../models';
-import '../assets/css/App.css';
+import { BookStatusEnum, BookStatuses } from '../../constants';
+import { IBook } from '../../models';
+import { SelectDropDownStyleWrapper } from './SelectDropDown.style';
 
 interface SelectDropDownProps {
    book: IBook;
    onMoveBook: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
-const SelectDropDown = (props: SelectDropDownProps) => {
+export const SelectDropDown = (props: SelectDropDownProps) => {
    const { book, onMoveBook } = props;
 
    const defaultValue = React.useMemo(() => {
@@ -32,7 +32,7 @@ const SelectDropDown = (props: SelectDropDownProps) => {
    }, [book.shelf]);
 
    return (
-      <div className="book-shelf-changer">
+      <SelectDropDownStyleWrapper>
          <select defaultValue={defaultValue} onChange={onMoveBook}>
             <option value="move" disabled>
                Move to...
@@ -43,8 +43,6 @@ const SelectDropDown = (props: SelectDropDownProps) => {
                </option>
             ))}
          </select>
-      </div>
+      </SelectDropDownStyleWrapper>
    );
 };
-
-export default SelectDropDown;

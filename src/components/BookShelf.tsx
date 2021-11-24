@@ -1,7 +1,7 @@
 import React from 'react';
 import BookGrid from './BookGrid';
 import { IBook } from '../models';
-import SelectDropDown from './SelectDropDown';
+import {SelectDropDown} from './';
 import BookCover from './BookCover';
 import '../assets/css/App.css';
 

@@ -51,7 +51,7 @@ const HomePage = () => {
           <h1>MyRead Books App</h1>
         </div>
         <div className="list-books-content">
-          {books && (
+          {books ? (
             <React.Fragment>
               <BookShelf
                 books={filteredBooks}
@@ -78,7 +78,7 @@ const HomePage = () => {
                 }
               />
             </React.Fragment>
-          )}
+          ) : null}
         </div>
         <div className="open-search">
           <Link to="/search">

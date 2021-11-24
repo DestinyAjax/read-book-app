@@ -78,24 +78,28 @@ const SearchPage = (props: any) => {
       </div>
       <div className="search-books-results">
         <BookGrid>
-          {filteredBooks.length > 0 &&
-            filteredBooks.map((book) => (
-              <BookGrid.Item key={book.id}>
-                <div className="book">
-                  <div className="book-top">
-                    {book.imageLinks && (
-                      <BookCover url={book.imageLinks.thumbnail ? book.imageLinks.thumbnail : ''} />
-                    )}
-                    <SelectDropDown book={book} onMoveBook={(e) => changeCategory(e, book)} />
+          {filteredBooks.length > 0
+            ? filteredBooks.map((book) => (
+                <BookGrid.Item key={book.id}>
+                  <div className="book">
+                    <div className="book-top">
+                      {book.imageLinks ? (
+                        <BookCover
+                          url={book.imageLinks.thumbnail ? book.imageLinks.thumbnail : ''}
+                        />
+                      ) : null}
+                      <SelectDropDown book={book} onMoveBook={(e) => changeCategory(e, book)} />
+                    </div>
+                    <div className="book-title">{book.title}</div>
+                    <div className="book-authors">
+                      {book.authors
+                        ? book.authors.map((author, index) => <span key={index}>{author}</span>)
+                        : null}
+                    </div>
                   </div>
-                  <div className="book-title">{book.title}</div>
-                  <div className="book-authors">
-                    {book.authors &&
-                      book.authors.map((author, index) => <span key={index}>{author}</span>)}
-                  </div>
-                </div>
-              </BookGrid.Item>
-            ))}
+                </BookGrid.Item>
+              ))
+            : null}
         </BookGrid>
       </div>
     </div>
