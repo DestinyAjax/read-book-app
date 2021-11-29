@@ -1,7 +1,7 @@
 import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { useQuery, useMutation } from 'react-query';
-import { SelectDropDown, BookCover, BookGrid } from '../../components';
+import { SelectDropDown, BookCover, BookGrid, BackButton } from '../../components';
 import { IBook } from '../../models';
 import { BookStatusEnum } from '../../constants';
 import { search, update, getAll } from '../../api/BookAPI';
@@ -64,9 +64,7 @@ const SearchPage = (props: any) => {
   return (
     <SearchPageStyle>
       <header>
-        <Link to="/">
-          <button className="close-search">Close</button>
-        </Link>
+        <BackButton />
         <div className="search-books-input-wrapper">
           <input
             type="text"
