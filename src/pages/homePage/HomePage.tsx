@@ -1,14 +1,14 @@
 import React from 'react';
 import { useQuery, useMutation } from 'react-query';
 import startCase from 'lodash/startCase';
-import { BookShelf, AddButton } from '../components';
-import { IBook } from '../models';
-import { BookStatusEnum } from '../constants';
-import { getAll, update } from '../api/BookAPI';
-import { reactQueryclient } from '../index';
-import '../assets/css/App.css';
+import { BookShelf, AddButton } from '../../components';
+import { IBook } from '../../models';
+import { BookStatusEnum } from '../../constants';
+import { getAll, update } from '../../api/BookAPI';
+import { reactQueryclient } from '../../index';
+import {HomePageStyle} from './homePage.style';
 
-const HomePage = () => {
+export const HomePage = () => {
   const [details, setDetails] = React.useState<{ book: IBook | null; shelf: string }>({
     book: null,
     shelf: '',
@@ -44,12 +44,12 @@ const HomePage = () => {
   }
 
   return (
-    <div className="app">
-      <header className="list-books-title">
+    <HomePageStyle>
+      <header className="title">
         <h1>My Book Library</h1>
       </header>
-      <section className="list-books">
-        <div className="list-books-content">
+      <section className="BookList">
+        <div className="BookList__content">
           {books ? (
             <React.Fragment>
               <BookShelf
@@ -79,12 +79,10 @@ const HomePage = () => {
             </React.Fragment>
           ) : null}
         </div>
-        <div className="open-search">
+        <div className="BookList__search">
           <AddButton />
         </div>
       </section>
-    </div>
+    </HomePageStyle>
   );
 };
-
-export default HomePage;

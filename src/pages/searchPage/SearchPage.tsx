@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { useQuery, useMutation } from 'react-query';
-import { SelectDropDown, BookCover, BookGrid } from '../components';
-import { IBook } from '../models';
-import { BookStatusEnum } from '../constants';
-import { search, update, getAll } from '../api/BookAPI';
-import { reactQueryclient } from '../index';
-import '../assets/css/App.css';
+import { SelectDropDown, BookCover, BookGrid } from '../../components';
+import { IBook } from '../../models';
+import { BookStatusEnum } from '../../constants';
+import { search, update, getAll } from '../../api/BookAPI';
+import { reactQueryclient } from '../../index';
+import { SearchPageStyle } from './searchPage.style';
 
 const SearchPage = (props: any) => {
   const [searchQuery, setSearchQuery] = React.useState('');
@@ -62,8 +62,8 @@ const SearchPage = (props: any) => {
   };
 
   return (
-    <div className="search-books">
-      <div className="search-books-bar">
+    <SearchPageStyle>
+      <header>
         <Link to="/">
           <button className="close-search">Close</button>
         </Link>
@@ -75,8 +75,8 @@ const SearchPage = (props: any) => {
             placeholder="Search by title or author"
           />
         </div>
-      </div>
-      <div className="search-books-results">
+      </header>
+      <section>
         <BookGrid>
           {filteredBooks.length > 0
             ? filteredBooks.map((book) => (
@@ -101,8 +101,8 @@ const SearchPage = (props: any) => {
               ))
             : null}
         </BookGrid>
-      </div>
-    </div>
+      </section>
+    </SearchPageStyle>
   );
 };
 

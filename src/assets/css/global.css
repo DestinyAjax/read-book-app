@@ -17,6 +17,10 @@ body,
   scroll-behavior: smooth;
 }
 
+body {
+  line-height: 1.5;
+}
+
 * {
   box-sizing: border-box;
   padding: 0;
