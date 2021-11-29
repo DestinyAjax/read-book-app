@@ -18,14 +18,14 @@ export const SelectDropDown = (props: SelectDropDownProps) => {
          case BookStatusEnum.CURRENTLY_READING:
             value = BookStatusEnum.CURRENTLY_READING;
             break;
-         case 'None':
-            value = BookStatusEnum.NONE;
+         case BookStatusEnum.WANT_TO_READ:
+            value = BookStatusEnum.WANT_TO_READ;
             break;
          case BookStatusEnum.READ:
             value = BookStatusEnum.READ;
             break;
          default:
-            value = BookStatusEnum.WANT_TO_READ;
+            value = BookStatusEnum.NONE;
             break;
       }
       return value;

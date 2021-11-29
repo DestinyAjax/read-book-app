@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { useQuery, useMutation } from 'react-query';
-import { SelectDropDown, BookCover, BookGrid, BackButton } from '../../components';
+import { BookShelf, BackButton, SearchInput } from '../../components';
 import { IBook } from '../../models';
 import { BookStatusEnum } from '../../constants';
 import { search, update, getAll } from '../../api/BookAPI';
@@ -50,10 +50,14 @@ const SearchPage = (props: any) => {
     [searchPayload, searchQuery]
   );
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.currentTarget.value;
+  const handleSearch = (query: string) => {
     setSearchQuery(query);
-    if (query) searchMutation.mutate({ query: query.trim() });
+
+    if (query && query.length >= 3) {
+      searchMutation.mutate({ query: query.trim() });
+    } else {
+      setSearchPayload([]);
+    }
   };
 
   const changeCategory = async (event: React.ChangeEvent<HTMLSelectElement>, book: IBook) => {
@@ -65,40 +69,15 @@ const SearchPage = (props: any) => {
     <SearchPageStyle>
       <header>
         <BackButton />
-        <div className="search-books-input-wrapper">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={handleSearch}
-            placeholder="Search by title or author"
-          />
-        </div>
+        <SearchInput onSearch={handleSearch} />
       </header>
       <section>
-        <BookGrid>
-          {filteredBooks.length > 0
-            ? filteredBooks.map((book) => (
-                <BookGrid.Item key={book.id}>
-                  <div className="book">
-                    <div className="book-top">
-                      {book.imageLinks ? (
-                        <BookCover
-                          url={book.imageLinks.thumbnail ? book.imageLinks.thumbnail : ''}
-                        />
-                      ) : null}
-                      <SelectDropDown book={book} onMoveBook={(e) => changeCategory(e, book)} />
-                    </div>
-                    <div className="book-title">{book.title}</div>
-                    <div className="book-authors">
-                      {book.authors
-                        ? book.authors.map((author, index) => <span key={index}>{author}</span>)
-                        : null}
-                    </div>
-                  </div>
-                </BookGrid.Item>
-              ))
-            : null}
-        </BookGrid>
+        <BookShelf
+          books={filteredBooks}
+          onChangeBook={(e: React.ChangeEvent<HTMLSelectElement>, book: IBook) =>
+            changeCategory(e, book)
+          }
+        />
       </section>
     </SearchPageStyle>
   );

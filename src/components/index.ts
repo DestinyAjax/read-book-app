@@ -4,3 +4,4 @@ export * from './BookGrid';
 export * from './BookShelf';
 export * from './AddButton';
 export * from './BackButton';
+export * from './SearchInput';

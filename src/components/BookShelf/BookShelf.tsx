@@ -6,18 +6,22 @@ import { BookShelfStyleWrapper} from './BookShelf.style';
 
 interface BookShelfProps {
   books: IBook[];
-  type: string;
-  title: string;
+  type?: string;
+  title?: string;
   onChangeBook: (event: React.ChangeEvent<HTMLSelectElement>, book: IBook) => void;
 }
 
 export const BookShelf = (props: BookShelfProps) => {
   const { books, type, title, onChangeBook } = props;
-  const filteredBooks = React.useMemo(() => books.filter((b) => b.shelf === type), [books, type]);
+  
+  const filteredBooks = React.useMemo(() => {
+    if (!type) return books;
+    return books.filter((b) => b.shelf === type)
+  }, [books, type]);
 
   return (
     <BookShelfStyleWrapper className="BookShelf">
-      <h2 className="BookShelf__title">{title}</h2>
+      {title ? <h2 className="BookShelf__title">{title}</h2> : null}
       <div className="BookShelf__books">
         <BookGrid>
           {filteredBooks.map((book) => (
